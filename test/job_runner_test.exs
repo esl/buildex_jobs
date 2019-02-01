@@ -18,7 +18,7 @@ defmodule RepoJobs.JobRunnerTest do
   setup do
     n = :rand.uniform(100)
     # create random directory so it can run concurrently
-    base_dir = Path.join([System.cwd!(), "test", "fixtures", "temp", to_string(n)])
+    base_dir = Path.join([File.cwd!(), "test", "fixtures", "temp", to_string(n)])
 
     on_exit(fn ->
       File.rm_rf!(base_dir)
