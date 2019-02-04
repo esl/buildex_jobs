@@ -200,7 +200,7 @@ defmodule RepoJobs.Consumer do
     Config.get_rabbitmq_client().consume(channel, queue, self(), config)
   end
 
-  defp schedule_connect() do
+  defp schedule_connect do
     send(self(), :connect)
   end
 end
