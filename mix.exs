@@ -16,7 +16,7 @@ defmodule RepoJobs.MixProject do
     ]
   end
 
-  defp package() do
+  defp package do
     [
       files: ~w(lib .formatter.exs mix.exs README.md LICENSE),
       licenses: ["Apache 2"],
