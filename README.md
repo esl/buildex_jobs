@@ -19,11 +19,11 @@ be found at [https://hexdocs.pm/repo_jobs](https://hexdocs.pm/repo_jobs).
 
 ## General Overview
 
-- BugsBunny creates a pool of connections to RabbitMQ
-- each connection worker traps exits and links the connection process to it
-- each connection worker creates a pool of channels and links them to it
-- we spawn in the ConsumerSupervisor a given number of GenServers that are going to be our RabbitMQ consumers
-- each consumer is going to get a channel out of the channel pool and is going to subscribe itself as a consumer via Basic.Consume using that channel
+  - BugsBunny creates a pool of connections to RabbitMQ
+  - each connection worker traps exits and links the connection process to it
+  - each connection worker creates a pool of channels and links them to it
+  - we spawn in the ConsumerSupervisor a given number of GenServers that are going to be our RabbitMQ consumers
+  - each consumer is going to get a channel out of the channel pool and is going to subscribe itself as a consumer via Basic.Consume using that channel
 
 ## High Level Architecture
 
