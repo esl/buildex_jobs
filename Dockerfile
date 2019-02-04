@@ -1,5 +1,5 @@
 # base image elixir to start with
-FROM bitwalker/alpine-elixir:1.8
+FROM bitwalker/alpine-elixir:1.8.0
 
 # install docker client
 RUN grep "http://dl-cdn.alpinelinux.org/alpine/v3.8/community/" /etc/apk/repositories \
@@ -28,10 +28,11 @@ RUN mix deps.get --only prod
 RUN mix compile
 
 # create release
-RUN mix release --name=jobs
+RUN mix release 
 
 ENV REPLACE_OS_VARS=true
-ENTRYPOINT ["_build/prod/rel/jobs/bin/jobs"]
+ENV COOKIE=buildex
+ENTRYPOINT ["_build/prod/rel/buildex_jobs/bin/buildex_jobs"]
 
 # run elixir app
 CMD ["help"]
