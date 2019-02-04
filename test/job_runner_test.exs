@@ -307,7 +307,11 @@ defmodule RepoJobs.JobRunnerTest do
   test "run a task with build_file", %{repo: repo} do
     %{tags: [tag]} = repo
 
-    task = %Task{id: 1, runner: Buildex.Common.TaskMockRunner, build_file_content: "This is a test"}
+    task = %Task{
+      id: 1,
+      runner: Buildex.Common.TaskMockRunner,
+      build_file_content: "This is a test"
+    }
 
     Buildex.Common.Service.MockDatabase
     |> expect(:get_repo_tasks, fn _url ->
@@ -335,7 +339,11 @@ defmodule RepoJobs.JobRunnerTest do
   test "fails to run a task with build_file", %{repo: repo} do
     %{tags: [tag]} = repo
 
-    task = %Task{id: 1, runner: Buildex.Common.TaskMockRunner, build_file_content: "This is a test"}
+    task = %Task{
+      id: 1,
+      runner: Buildex.Common.TaskMockRunner,
+      build_file_content: "This is a test"
+    }
 
     Buildex.Common.Service.MockDatabase
     |> expect(:get_repo_tasks, fn _url ->
@@ -360,7 +368,11 @@ defmodule RepoJobs.JobRunnerTest do
   test "runs multiple types of tasks", %{repo: repo} do
     %{tags: [tag]} = repo
 
-    task1 = %Task{id: 1, runner: Buildex.Common.TaskMockRunner, build_file_content: "This is a test"}
+    task1 = %Task{
+      id: 1,
+      runner: Buildex.Common.TaskMockRunner,
+      build_file_content: "This is a test"
+    }
 
     task2 = %Task{
       url: "https://github.com/f@k3/fake",

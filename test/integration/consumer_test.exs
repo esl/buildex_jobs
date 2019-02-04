@@ -326,7 +326,11 @@ defmodule RepoJobs.Integration.ConsumerTest do
 
       %{tags: [tag]} = repo
 
-      task = %Task{id: 1, runner: Buildex.Common.TaskMockRunner, build_file_content: "This is a test"}
+      task = %Task{
+        id: 1,
+        runner: Buildex.Common.TaskMockRunner,
+        build_file_content: "This is a test"
+      }
 
       Buildex.Common.Service.MockDatabase
       |> expect(:get_repo_tasks, fn _url ->
@@ -357,7 +361,11 @@ defmodule RepoJobs.Integration.ConsumerTest do
 
       %{tags: [tag]} = repo
 
-      task = %Task{id: 1, runner: Buildex.Common.TaskMockRunner, build_file_content: "This is a test"}
+      task = %Task{
+        id: 1,
+        runner: Buildex.Common.TaskMockRunner,
+        build_file_content: "This is a test"
+      }
 
       Buildex.Common.Service.MockDatabase
       |> expect(:get_repo_tasks, fn _url ->
