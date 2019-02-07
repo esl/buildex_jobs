@@ -20,14 +20,12 @@ defmodule RepoJobs.Config do
     Application.get_env(:buildex_jobs, :rabbitmq_config, [])
   end
 
-  def get_rabbitmq_queue do
-    get_rabbitmq_config()
-    |> Keyword.fetch!(:queue)
+  def get_rabbitmq_queue() do
+    Application.fetch_env!(:buildex_jobs, :queue)
   end
 
-  def get_rabbitmq_exchange do
-    get_rabbitmq_config()
-    |> Keyword.fetch!(:exchange)
+  def get_rabbitmq_exchange() do
+    Application.fetch_env!(:buildex_jobs, :exchange)
   end
 
   def get_rabbitmq_client do
