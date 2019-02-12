@@ -24,8 +24,12 @@ defmodule RepoJobs.Integration.ConsumerTest do
     rabbitmq_config = [
       channels: 1,
       port: String.to_integer(System.get_env("POLLER_RMQ_PORT") || "5672"),
-      queue: @queue,
-      exchange: "",
+      queues: [
+        [
+          queue_name: @queue,
+          exchange: ""
+        ]
+      ],
       adapter: RabbitMQ
     ]
 
@@ -49,6 +53,8 @@ defmodule RepoJobs.Integration.ConsumerTest do
 
     Application.put_env(:buildex_jobs, :rabbitmq_config, rabbitmq_config)
     Application.put_env(:buildex_jobs, :database, Buildex.Common.Service.MockDatabase)
+    Application.put_env(:buildex_jobs, :queue, @queue)
+    Application.put_env(:buildex_jobs, :exchange, "")
 
     start_supervised!(%{
       id: ExRabbitPool.PoolSupervisorTest,

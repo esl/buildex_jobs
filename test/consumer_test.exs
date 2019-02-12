@@ -8,6 +8,8 @@ defmodule RepoJobs.ConsumerTest do
   alias ExRabbitPool.Worker.RabbitConnection
   alias RepoJobs.Consumer
 
+  @queue "test.queue"
+
   setup do
     n = :rand.uniform(100)
     pool_id = String.to_atom("test_pool#{n}")
@@ -16,13 +18,17 @@ defmodule RepoJobs.ConsumerTest do
     rabbitmq_config = [
       channels: 1,
       port: String.to_integer(System.get_env("POLLER_RMQ_PORT") || "5672"),
-      queue: "test.queue",
-      exchange: "",
+      queues: [
+        [
+          queue_name: @queue,
+          exchange: "",
+          queue_options: [auto_delete: true],
+          exchange_options: [auto_delete: true]
+        ]
+      ],
       adapter: FakeRabbitMQ,
       caller: caller,
-      reconnect: 10,
-      queue_options: [auto_delete: true],
-      exchange_options: [auto_delete: true]
+      reconnect: 10
     ]
 
     rabbitmq_conn_pool = [
@@ -35,6 +41,8 @@ defmodule RepoJobs.ConsumerTest do
     ]
 
     Application.put_env(:buildex_jobs, :rabbitmq_config, rabbitmq_config)
+    Application.put_env(:buildex_jobs, :queue, @queue)
+    Application.put_env(:buildex_jobs, :exchange, "")
 
     start_supervised!(%{
       id: ExRabbitPool.PoolSupervisorTest,
