@@ -39,11 +39,13 @@ defmodule RepoJobs.MixProject do
       {:buildex_common, git: "https://github.com/esl/buildex_common.git", branch: "master"},
       {:poison, "~> 4.0"},
       {:httpoison, "~> 1.3.0"},
-      {:mox, "~> 0.4", only: :test},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:excoveralls, "~> 0.10.4", only: [:dev, :test], runtime: false},
+      {:mox, "~> 0.5", only: :test},
+      {:credo, "~> 1.1", only: [:dev, :test], runtime: false},
+      {:excoveralls, "~> 0.11", only: [:dev, :test], runtime: false},
       {:distillery, "~> 2.0"},
-      {:confex, "~> 3.4.0"}
+      {:confex, "~> 3.4.0"},
+      {:jsx, "~> 2.9", override: true},
+      {:ranch, "~> 1.6.0", override: true}
     ]
   end
 end
