@@ -10,11 +10,18 @@ defmodule RepoJobs.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     rabbitmq_config = Config.get_rabbitmq_config()
-    rabbitmq_conn_pool = Config.get_connection_pool_config()
+    pool_config = Config.get_connection_pool_config()
+
+    rabbitmq_conn_pool =
+      if pool_config == [] do
+        []
+      else
+        [pool_config]
+      end
 
     children = [
       {ExRabbitPool.PoolSupervisor,
-       [rabbitmq_config: rabbitmq_config, connection_pools: [rabbitmq_conn_pool]]},
+       [rabbitmq_config: rabbitmq_config, connection_pools: rabbitmq_conn_pool]},
       {ConsumerSupervisor, []}
     ]
 

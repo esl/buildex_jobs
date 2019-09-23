@@ -5,7 +5,7 @@ defmodule RepoJobs.ConsumerTest do
   import ExUnit.CaptureLog
 
   alias ExRabbitPool.FakeRabbitMQ
-  alias ExRabbitPool.Worker.RabbitConnection
+  alias ExRabbitPool.Worker.{RabbitConnection, SetupQueue}
   alias RepoJobs.Consumer
 
   @queue "test.queue"
@@ -32,8 +32,6 @@ defmodule RepoJobs.ConsumerTest do
     ]
 
     rabbitmq_conn_pool = [
-      :rabbitmq_conn_pool,
-      pool_id: pool_id,
       name: {:local, pool_id},
       worker_module: RabbitConnection,
       size: 1,
@@ -49,11 +47,13 @@ defmodule RepoJobs.ConsumerTest do
       start:
         {ExRabbitPool.PoolSupervisor, :start_link,
          [
-           [rabbitmq_config: rabbitmq_config, rabbitmq_conn_pool: rabbitmq_conn_pool],
+           [rabbitmq_config: rabbitmq_config, connection_pools: [rabbitmq_conn_pool]],
            ExRabbitPool.PoolSupervisorTest
          ]},
       type: :supervisor
     })
+
+    start_supervised!({SetupQueue, {pool_id, rabbitmq_config}})
 
     {:ok, pool_id: pool_id}
   end
@@ -93,8 +93,8 @@ defmodule RepoJobs.ConsumerTest do
     assert %{channel: channel, consumer_tag: "tag"} = Consumer.state(pid)
     conn_worker = :poolboy.checkout(pool_id)
     :ok = :poolboy.checkin(pool_id, conn_worker)
-    assert %{channels: [], monitors: [monitor]} = RabbitConnection.state(conn_worker)
-    assert {_ref, ^channel} = monitor
+    assert %{channels: [], monitors: monitors} = RabbitConnection.state(conn_worker)
+    assert Map.has_key?(monitors, channel.pid)
   end
 
   test "handles errors when trying to get a channel", %{pool_id: pool_id} do

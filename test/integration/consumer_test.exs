@@ -5,7 +5,7 @@ defmodule RepoJobs.Integration.ConsumerTest do
   import Mox
 
   alias ExRabbitPool.RabbitMQ
-  alias ExRabbitPool.Worker.RabbitConnection
+  alias ExRabbitPool.Worker.{RabbitConnection, SetupQueue}
   alias RepoJobs.Consumer
   alias AMQP.{Connection, Channel, Queue}
   alias Buildex.Common.Jobs.NewReleaseJob
@@ -34,8 +34,6 @@ defmodule RepoJobs.Integration.ConsumerTest do
     ]
 
     rabbitmq_conn_pool = [
-      :rabbitmq_conn_pool,
-      pool_id: pool_id,
       name: {:local, pool_id},
       worker_module: RabbitConnection,
       size: 1,
@@ -61,11 +59,13 @@ defmodule RepoJobs.Integration.ConsumerTest do
       start:
         {ExRabbitPool.PoolSupervisor, :start_link,
          [
-           [rabbitmq_config: rabbitmq_config, rabbitmq_conn_pool: rabbitmq_conn_pool],
+           [rabbitmq_config: rabbitmq_config, connection_pools: [rabbitmq_conn_pool]],
            ExRabbitPool.PoolSupervisorTest
          ]},
       type: :supervisor
     })
+
+    start_supervised!({SetupQueue, {pool_id, [queues: rabbitmq_config[:queues]]}})
 
     {:ok, pool_id: pool_id, channel: channel}
   end
@@ -91,7 +91,7 @@ defmodule RepoJobs.Integration.ConsumerTest do
       end)
 
     assert log =~ "[error] [consumer] channel down reason: :normal"
-    assert log =~ "[error] [Rabbit] channel lost, attempting to reconnect reason: :normal"
+    assert log =~ "[Rabbit] channel lost reason: :normal"
   end
 
   test "consumes messaged published to the queue", %{channel: channel, pool_id: pool_id} do
