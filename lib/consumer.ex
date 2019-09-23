@@ -148,6 +148,7 @@ defmodule RepoJobs.Consumer do
       end
     rescue
       exception ->
+        Logger.error("Error running job reason: #{inspect(exception)}")
         :ok = client.reject(channel, delivery_tag, requeue: true)
         if caller, do: send(caller, {:reject, exception})
         {:noreply, state}

@@ -12,8 +12,11 @@ defmodule RepoJobs.Config do
   end
 
   def get_connection_pool_id do
-    get_connection_pool_config()
-    |> Keyword.fetch!(:pool_id)
+    {_, pool_id} =
+      get_connection_pool_config()
+      |> Keyword.fetch!(:name)
+
+    pool_id
   end
 
   def get_rabbitmq_config do

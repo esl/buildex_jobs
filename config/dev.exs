@@ -8,13 +8,12 @@ config :buildex_jobs, :rabbitmq_config,
   channels: 1,
   queues: [
     [
-      queue: "new_releases.queue",
+      queue_name: "new_releases.queue",
       exchange: ""
     ]
   ]
 
 config :buildex_jobs, :rabbitmq_conn_pool,
-  pool_id: :connection_pool,
   name: {:local, :connection_pool},
   worker_module: ExRabbitPool.Worker.RabbitConnection,
   size: 1,
